@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models import Notes
-from schemas import NotesSchema
+from database.models import Notes
+from schema.schemas import NotesSchema
 
 
 def get_notes(db: Session, skip: int = 0, limit: int = 100):
