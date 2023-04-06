@@ -5,7 +5,7 @@ from pydantic.generics import GenericModel
 T = TypeVar('T')
 
 
-class BookSchema(BaseModel):
+class NotesSchema(BaseModel):
     id: Optional[int] = None
     title: Optional[str] = None
     description: Optional[str] = None
@@ -18,8 +18,8 @@ class Request(GenericModel, Generic[T]):
     parameter: Optional[T] = Field(...)
 
 
-class RequestBook(BaseModel):
-    parameter: BookSchema = Field(...)
+class RequestNotes(BaseModel):
+    parameter: NotesSchema = Field(...)
 
 
 class Response(GenericModel, Generic[T]):
@@ -27,4 +27,3 @@ class Response(GenericModel, Generic[T]):
     status: str
     message: str
     result: Optional[T]
-    

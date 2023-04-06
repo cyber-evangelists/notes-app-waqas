@@ -1,36 +1,36 @@
 from sqlalchemy.orm import Session
-from models import Book
-from schemas import BookSchema
+from models import Notes
+from schemas import NotesSchema
 
 
-def get_book(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Book).offset(skip).limit(limit).all()
+def get_notes(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Notes).offset(skip).limit(limit).all()
 
 
-def get_book_by_id(db: Session, book_id: int):
-    return db.query(Book).filter(Book.id == book_id).first()
+def get_notes_by_id(db: Session, notes_id: int):
+    return db.query(Notes).filter(Notes.id == notes_id).first()
 
 
-def create_book(db: Session, book: BookSchema):
-    _book = Book(title=book.title, description=book.description)
-    db.add(_book)
+def create_notes(db: Session, notes: NotesSchema):
+    notes = Notes(title=notes.title, description=notes.description)
+    db.add(notes)
     db.commit()
-    db.refresh(_book)
-    return _book
+    db.refresh(notes)
+    return notes
 
 
-def remove_book(db: Session, book_id: int):
-    _book = get_book_by_id(db=db, book_id=book_id)
-    db.delete(_book)
+def remove_notes(db: Session, notes_id: int):
+    notes = get_notes_by_id(db=db, notes_id=notes_id)
+    db.delete(notes)
     db.commit()
 
 
-def update_book(db: Session, book_id: int, title: str, description: str):
-    _book = get_book_by_id(db=db, book_id=book_id)
+def update_notes(db: Session, notes_id: int, title: str, description: str):
+    notes = get_notes_by_id(db=db, notes_id=notes_id)
 
-    _book.title = title
-    _book.description = description
+    notes.title = title
+    notes.description = description
 
     db.commit()
-    db.refresh(_book)
-    return _book
+    db.refresh(notes)
+    return notes

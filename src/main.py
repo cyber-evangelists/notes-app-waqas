@@ -7,11 +7,11 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# app.include_router(router, prefix="/book", tags=["book"])
+app.include_router(router, prefix="/notes", tags=["notes"])
 
 
-@app.post("/create-notes")
-def create_notes(details: ):
+# @app.post("/create-notes")
+# def create_notes(details: NotesSchema, db: S):
     
 
 
