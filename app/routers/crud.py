@@ -27,10 +27,8 @@ def remove_notes(db: Session, notes_id: int):
 
 def update_notes(db: Session, notes_id: int, title: str, description: str):
     notes = get_notes_by_id(db=db, notes_id=notes_id)
-
     notes.title = title
     notes.description = description
-
     db.commit()
     db.refresh(notes)
     return notes
