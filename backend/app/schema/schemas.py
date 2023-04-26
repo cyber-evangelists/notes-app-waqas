@@ -11,13 +11,19 @@ class NotesSchema(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     check_in: Optional[bool] = False
-    profile_photo: Optional[bytes] = None
+    # profile_photo: Optional[bytes] = None
     created_at: datetime
-    # image: Optional[LargeBinary] = None
-
+    # image: Optional[bytes] = None
+    
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+
+
+class UsersSchema(BaseModel):
+    id: Optional[int] = None
+    access_token: Optional[str] = None
+    
 
 
 class Request(GenericModel, Generic[T]):
@@ -27,6 +33,10 @@ class Request(GenericModel, Generic[T]):
 class RequestNotes(BaseModel):
     parameter: NotesSchema = Field(...)
 
+
+class RequestUsers(BaseModel):
+    parameter: UsersSchema = Field(...)
+    
 
 class Response(GenericModel, Generic[T]):
     code: str
