@@ -1,12 +1,11 @@
 from fastapi import APIRouter, Depends, File, UploadFile
 from database.config import SessionLocal
 from sqlalchemy.orm import Session
-from schema.schemas import Response, RequestNotes
+from schema.schemas import Response, RequestNotes, RequestUsers
 from routers import crud
 
 
 router = APIRouter()
-
 
 def get_db():
     db = SessionLocal()
@@ -20,7 +19,7 @@ def get_db():
 async def create_notes_service(request: RequestNotes, db: Session = Depends(get_db)):
     crud.create_notes(db, notes=request.parameter)
     return Response(status="Ok", code="200", message="Notes created successfully").dict(
-        exclude_none=True
+        exclude_none=True 
     )
 
 
@@ -50,4 +49,12 @@ async def delete_notes(request: RequestNotes, db: Session = Depends(get_db)):
     crud.remove_notes(db, notes_id=request.parameter.id)
     return Response(status="Ok", code="200", message="Success delete data").dict(
         exclude_none=True
+    )
+
+
+@router.post('auth/facebook')
+async def create_notes_service(request: RequestUsers, db: Session = Depends(get_db)):
+    crud.create_users(db, notes=request.parameter)
+    return Response(status="Ok", code="200", message="Notes created successfully").dict(
+        exclude_none=True 
     )
