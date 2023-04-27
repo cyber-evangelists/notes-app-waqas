@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, File, UploadFile
+from fastapi import APIRouter, Depends
 from database.config import SessionLocal
 from sqlalchemy.orm import Session
 from schema.schemas import Response, RequestNotes, RequestUsers
@@ -6,6 +6,7 @@ from routers import crud
 
 
 router = APIRouter()
+
 
 def get_db():
     db = SessionLocal()
@@ -15,15 +16,15 @@ def get_db():
         db.close()
 
 
-@router.post("/create")
+@router.post("/notes/create")
 async def create_notes_service(request: RequestNotes, db: Session = Depends(get_db)):
     crud.create_notes(db, notes=request.parameter)
     return Response(status="Ok", code="200", message="Notes created successfully").dict(
-        exclude_none=True 
+        exclude_none=True
     )
 
 
-@router.get("/")
+@router.get("/notes")
 async def get_notses(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     notes = crud.get_notes(db, skip, limit)
     return Response(
@@ -31,20 +32,21 @@ async def get_notses(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     )
 
 
-@router.patch("/update")
+@router.patch("/notes/update")
 async def update_notes(request: RequestNotes, db: Session = Depends(get_db)):
     notes = crud.update_notes(
         db,
         notes_id=request.parameter.id,
         title=request.parameter.title,
         description=request.parameter.description,
+        check_in=request.parameter.check_in,
     )
     return Response(
         status="Ok", code="200", message="Success update data", result=notes
     )
 
 
-@router.delete("/delete")
+@router.delete("/notes/delete")
 async def delete_notes(request: RequestNotes, db: Session = Depends(get_db)):
     crud.remove_notes(db, notes_id=request.parameter.id)
     return Response(status="Ok", code="200", message="Success delete data").dict(
@@ -52,9 +54,17 @@ async def delete_notes(request: RequestNotes, db: Session = Depends(get_db)):
     )
 
 
-@router.post('auth/facebook')
-async def create_notes_service(request: RequestUsers, db: Session = Depends(get_db)):
-    crud.create_users(db, notes=request.parameter)
-    return Response(status="Ok", code="200", message="Notes created successfully").dict(
-        exclude_none=True 
+@router.post("/auth/facebook")
+async def create_users_service(request: RequestUsers, db: Session = Depends(get_db)):
+    crud.create_users(db, users=request.parameter)
+    return Response(status="Ok", code="200", message="User created successfully").dict(
+        exclude_none=True
+    )
+
+
+@router.get("/users")
+async def get_user(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    user = crud.get_users(db, skip, limit)
+    return Response(
+        status="Ok", code="200", message="Success fetch all data", result=user
     )

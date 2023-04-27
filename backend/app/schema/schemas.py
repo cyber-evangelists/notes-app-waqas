@@ -1,10 +1,11 @@
-from typing import List, Optional, Generic, TypeVar
+from typing import Optional, Generic, TypeVar
 from pydantic import BaseModel, Field
 from pydantic.generics import GenericModel
 from datetime import datetime
 
 
 T = TypeVar("T")
+
 
 class NotesSchema(BaseModel):
     id: Optional[int] = None
@@ -14,16 +15,14 @@ class NotesSchema(BaseModel):
     # profile_photo: Optional[bytes] = None
     created_at: datetime
     # image: Optional[bytes] = None
-    
+
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
 
 
-class UsersSchema(BaseModel):
-    id: Optional[int] = None
-    access_token: Optional[str] = None
-    
+class FacebookAuthUsersSchema(BaseModel):
+    access_token: str
 
 
 class Request(GenericModel, Generic[T]):
@@ -35,8 +34,8 @@ class RequestNotes(BaseModel):
 
 
 class RequestUsers(BaseModel):
-    parameter: UsersSchema = Field(...)
-    
+    parameter: FacebookAuthUsersSchema = Field(...)
+
 
 class Response(GenericModel, Generic[T]):
     code: str
