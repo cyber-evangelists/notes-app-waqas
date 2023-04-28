@@ -21,21 +21,13 @@ class NotesSchema(BaseModel):
         arbitrary_types_allowed = True
 
 
-class FacebookAuthUsersSchema(BaseModel):
-    access_token: str
-
-
 class Request(GenericModel, Generic[T]):
     parameter: Optional[T] = Field(...)
 
 
 class RequestNotes(BaseModel):
     parameter: NotesSchema = Field(...)
-
-
-class RequestUsers(BaseModel):
-    parameter: FacebookAuthUsersSchema = Field(...)
-
+   
 
 class Response(GenericModel, Generic[T]):
     code: str

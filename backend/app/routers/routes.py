@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from database.config import SessionLocal
 from sqlalchemy.orm import Session
-from schema.schemas import Response, RequestNotes, RequestUsers
+from schema.schemas import Response, RequestNotes
 from routers import crud
 
 
@@ -54,17 +54,17 @@ async def delete_notes(request: RequestNotes, db: Session = Depends(get_db)):
     )
 
 
-@router.post("/auth/facebook")
-async def create_users_service(request: RequestUsers, db: Session = Depends(get_db)):
-    crud.create_users(db, users=request.parameter)
+@router.post('/login/facebook')
+async def create_client_service(db: Session = Depends(get_db)):
+    crud.create_client(db)
     return Response(status="Ok", code="200", message="User created successfully").dict(
         exclude_none=True
     )
 
 
 @router.get("/users")
-async def get_user(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    user = crud.get_users(db, skip, limit)
+async def get_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    user = crud.get_user(db, skip, limit)
     return Response(
         status="Ok", code="200", message="Success fetch all data", result=user
     )

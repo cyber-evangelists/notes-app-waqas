@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
-from database.models import Notes, FacebookAuthUsers
-from schema.schemas import NotesSchema, FacebookAuthUsersSchema
-from sqlalchemy import BINARY
-from datetime import datetime
-from fastapi import UploadFile, File
+from database.models import Notes, ClientData
+from schema.schemas import NotesSchema
+import facebook
+import requests
 
 
 def get_notes(db: Session, skip: int = 0, limit: int = 100):
@@ -49,13 +48,21 @@ def update_notes(
     return notes
 
 
-def create_users(db: Session, users: FacebookAuthUsersSchema):
-    users = FacebookAuthUsers(access_token=users.access_token)
-    db.add(users)
+def create_client(db: Session):
+
+    url = "https://graph.facebook.com/v16.0/me?fields=name%2Cemail&access_token=EAASPaTEoZANoBAMbCeSPBzr9Hr0pdXdlO4IZCZCW2bZCtG7XZCgzET2MM1JlXs4ZAd1YeqzMeqzcPKgodm61eNh4lVlAsZAGKSFkyLWXx8CfLLhfZBVRuCh4cdsPc3nfZCfqKQswmPPUyahYQZAKfDA4IxqmqS44kaMM7ZCo4VhZCZCa4V0viY46dhJxpOl9EL3EuiugxAIcyrW1EUoUxjPip2ZBSDSDUDf1MKumEY5k2N4TVqEk8ZAe2xi8up1"
+    response = requests.get(url)
+    user = response.json()
+    user = ClientData(
+        # id=user["id"],
+        name=user["name"],
+        email=user["email"],
+    )
+    db.add(user)
     db.commit()
-    db.refresh(users)
-    return users
+    db.refresh(user)
+    return user
 
 
-def get_users(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(FacebookAuthUsers).offset(skip).limit(limit).all()
+def get_user(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(ClientData).offset(skip).limit(limit).all()
