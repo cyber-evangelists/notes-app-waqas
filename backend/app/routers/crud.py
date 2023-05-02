@@ -51,7 +51,6 @@ def create_client(db: Session, access_token: str):
     url =  f"https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail&access_token={access_token}"
     response = requests.get(url)
     user = response.json()
-    print(user)
     user = ClientData(
         name = user["name"],
         email = user["email"],
