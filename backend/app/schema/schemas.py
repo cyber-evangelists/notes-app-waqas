@@ -19,6 +19,13 @@ class NotesSchema(BaseModel):
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
+       
+       
+class ClientDataSchema(BaseModel):
+    id: Optional[int] = None
+    name: Optional[str] = None
+    email: Optional[str] = None
+    access_token: Optional[str] = None
 
 
 class Request(GenericModel, Generic[T]):
@@ -27,7 +34,7 @@ class Request(GenericModel, Generic[T]):
 
 class RequestNotes(BaseModel):
     parameter: NotesSchema = Field(...)
-   
+    
 
 class Response(GenericModel, Generic[T]):
     code: str

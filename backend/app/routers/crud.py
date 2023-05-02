@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 from database.models import Notes, ClientData
 from schema.schemas import NotesSchema
-import facebook
 import requests
 
 
@@ -48,15 +47,15 @@ def update_notes(
     return notes
 
 
-def create_client(db: Session):
-
-    url = "https://graph.facebook.com/v16.0/me?fields=name%2Cemail&access_token=EAASPaTEoZANoBAMbCeSPBzr9Hr0pdXdlO4IZCZCW2bZCtG7XZCgzET2MM1JlXs4ZAd1YeqzMeqzcPKgodm61eNh4lVlAsZAGKSFkyLWXx8CfLLhfZBVRuCh4cdsPc3nfZCfqKQswmPPUyahYQZAKfDA4IxqmqS44kaMM7ZCo4VhZCZCa4V0viY46dhJxpOl9EL3EuiugxAIcyrW1EUoUxjPip2ZBSDSDUDf1MKumEY5k2N4TVqEk8ZAe2xi8up1"
+def create_client(db: Session, access_token: str):
+    url =  f"https://graph.facebook.com/v16.0/me?fields=id%2Cname%2Cemail&access_token={access_token}"
     response = requests.get(url)
     user = response.json()
+    print(user)
     user = ClientData(
-        # id=user["id"],
-        name=user["name"],
-        email=user["email"],
+        name = user["name"],
+        email = user["email"],
+        access_token = access_token,
     )
     db.add(user)
     db.commit()

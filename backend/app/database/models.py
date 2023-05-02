@@ -16,7 +16,7 @@ class Notes(Base):
 
 class ClientData(Base):
     __tablename__ = "FacebookClientData"
-    # id = Column(String, nullable=True)
+    id = Column(Integer, primary_key= True)
     name = Column(String, nullable=True)
-    email = Column(String, primary_key=True)
-    access_token = Column(String, nullable=True)
+    email = Column(String, nullable=True)
+    access_token = Column(String, nullable=False)

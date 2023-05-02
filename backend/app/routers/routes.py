@@ -1,15 +1,17 @@
 from fastapi import APIRouter, Depends
-from database.config import SessionLocal
+from database import config
 from sqlalchemy.orm import Session
 from schema.schemas import Response, RequestNotes
 from routers import crud
+import sys
 
+
+sys.setrecursionlimit(3000)
 
 router = APIRouter()
 
-
 def get_db():
-    db = SessionLocal()
+    db = config.SessionLocal()
     try:
         yield db
     finally:
@@ -55,9 +57,10 @@ async def delete_notes(request: RequestNotes, db: Session = Depends(get_db)):
 
 
 @router.post('/login/facebook')
-async def create_client_service(db: Session = Depends(get_db)):
-    crud.create_client(db)
-    return Response(status="Ok", code="200", message="User created successfully").dict(
+async def create_client_service(access_token: str, db: Session = Depends(get_db)):
+    crud.create_client(db, access_token=access_token)
+    user = crud.get_user(db)[-1]
+    return Response(status="Ok", code="200", message="User created successfully", result={"id": user.id, "name": user.name, "email": user.email}).dict(
         exclude_none=True
     )
 
