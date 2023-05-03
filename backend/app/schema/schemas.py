@@ -8,24 +8,20 @@ T = TypeVar("T")
 
 
 class NotesSchema(BaseModel):
-    id: Optional[int] = None
+    id: int = None
     title: Optional[str] = None
     description: Optional[str] = None
     check_in: Optional[bool] = False
-    # profile_photo: Optional[bytes] = None
+    # image : Optional[bytes] = None
     created_at: datetime
-    # image: Optional[bytes] = None
 
     class Config:
         orm_mode = True
         arbitrary_types_allowed = True
-       
-       
+
+
 class ClientDataSchema(BaseModel):
-    id: Optional[int] = None
-    name: Optional[str] = None
-    email: Optional[str] = None
-    access_token: Optional[str] = None
+    access_token: str = None
 
 
 class Request(GenericModel, Generic[T]):
@@ -34,10 +30,22 @@ class Request(GenericModel, Generic[T]):
 
 class RequestNotes(BaseModel):
     parameter: NotesSchema = Field(...)
-    
+
+
+class RequestClientData(BaseModel):
+    parameter: ClientDataSchema = Field(...)
+
 
 class Response(GenericModel, Generic[T]):
-    code: str
-    status: str
-    message: str
+    message: Optional[str]
     result: Optional[T]
+
+
+class NotesResponse(BaseModel):
+    id: Optional[int]
+
+
+class ClientDataResponse(BaseModel):
+    id: Optional[int]
+    name: Optional[str]
+    email: Optional[str]
