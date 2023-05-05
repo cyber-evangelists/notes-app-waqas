@@ -1,19 +1,16 @@
 from typing import Optional, Generic, TypeVar
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from pydantic.generics import GenericModel
 from datetime import datetime
 
 
 T = TypeVar("T")
 
-
 class NotesSchema(BaseModel):
-    id: int = None
     title: Optional[str] = None
     description: Optional[str] = None
     check_in: Optional[bool] = False
     # image : Optional[bytes] = None
-    created_at: datetime
 
     class Config:
         orm_mode = True
@@ -22,6 +19,17 @@ class NotesSchema(BaseModel):
 
 class ClientDataSchema(BaseModel):
     access_token: str = None
+    
+    
+class MyUserSchema(BaseModel):
+    # username: str = Field(..., min_length = 5, max_length = 255)
+    email: str = Field(..., max_length = 255)
+    password: str = Field(..., min_length = 8)
+    
+    
+class LoginMyUserSchema(BaseModel):
+    email: EmailStr = None
+    password: str = None
 
 
 class Request(GenericModel, Generic[T]):
@@ -34,6 +42,14 @@ class RequestNotes(BaseModel):
 
 class RequestClientData(BaseModel):
     parameter: ClientDataSchema = Field(...)
+    
+    
+class RequestMyUser(BaseModel):
+    parameter: MyUserSchema = Field(...)
+
+
+class RequestLoginMyUser(BaseModel):
+    parameter: LoginMyUserSchema = Field(...)
 
 
 class Response(GenericModel, Generic[T]):
@@ -46,6 +62,5 @@ class NotesResponse(BaseModel):
 
 
 class ClientDataResponse(BaseModel):
-    id: Optional[int]
     name: Optional[str]
     email: Optional[str]
